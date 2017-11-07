@@ -40,6 +40,7 @@ print('Training data extracted!')
 usefull_filed(org_test_file, 'test.csv')
 print('Test data extracted!')
 
+#create a dictionary of the words 
 def create_lexicon(train_file):
     lex = []
     lemmatizer = WordNetLemmatizer()
@@ -60,17 +61,31 @@ def create_lexicon(train_file):
         
             count_word = OrderedDict(sorted(count_word.items(), key=lambda t: t[1]))
             for word in count_word:
-                if count_word[word] <800000 and count_word[word] > 10:
+                if count_word[word] < 800000 and count_word[word] > 10:
                     lex.append(word)
         except Exception as e:
             print(e)
     return lex
 
-lex = create_lexicon('training.1600000.processed.noemoticon.csv')
-print('Lexcion data extracted!')
+#lex = create_lexicon('training.1600000.processed.noemoticon.csv')
+#print('Lexcion data extracted!')
 
-with open('lexcion.pickle', 'wb') as f:
-    pickle.dump(lex, f)
+#save the words in a file
+#with open('lexcion.pickle', 'wb') as f:
+#    pickle.dump(lex, f)
+
+#change the word to a number
+with open('lexcion.pickle', 'rb') as f:
+    lex = pickle.load(f)
+def word2num(lex):
+    wn = {}
+    i = 0
+    for item in lex:
+        wn[item] = i
+        i = i + 1
+    return wn
+
+#print word2num(lex)
 
 #f = open('lexcion.pickle', 'rb')
 #lex = pickle.load(f)
@@ -82,25 +97,36 @@ def data_processing(inputfile, outputfile):
     with open(inputfile, 'rb', buffering=1000) as f:
         lemmatizer = WordNetLemmatizer()
         i = 0
+        wn = word2num(lex)
+        length = 0
         for line in f.readlines():
             label, tweet = line.split('|-|')
             words = word_tokenize(tweet.lower())
             words = [lemmatizer.lemmatize(word) for word in words]
 
+            features = []
+            for word in words:
+                if word in lex:
+                    features.append(wn[word])
+            '''
             features = np.zeros(len(lex))
             for word in words:
                 if word in lex:
                     features[lex.index(word)] = 1
-
+            '''
             #print(features)
-            outputline = label + '|||' + str(list(features)) + '\n'
+            word_len = len(features)
+            if length < word_len:
+                length = word_len
+            outputline = label + '|-|' + str(features) + '\n'
             output.write(outputline)
             if i % 1000 == 0:
-                print('Data processing: ', i/1600000)
+                print('Data processing: ' + str(i/1600000) + '%')
             i = i + 1
+        print length
     output.close
 
-#data_processing('training.csv', 'train_data.csv')
+data_processing('training.csv', 'train_data.csv')
 '''
 #test output csv
 f = open('training.csv', 'rb')

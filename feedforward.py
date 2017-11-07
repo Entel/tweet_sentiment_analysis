@@ -21,23 +21,6 @@ n_layer_1 = 2000
 n_layer_2 = 2000
 n_output_layer = 3
 
-def neural_network(data):
-    layer_1_wb = {'w_':tf.Variable(tf.random_normal([n_input_leyer, n_layer_1])), 'b_':tf.Variable(tf.random_normal([n_layer_1]))}
-    layer_2_wb = {'w_':tf.Variable(tf.random_normal([n_layer_1, n_layer_2])), 'b_':tf.Variable(tf.random_normal([n_layer_2]))}
-    layer_output_wb = {'w_':tf.Variable(tf.random_normal([n_layer_2, n_output_layer])), 'b_':tf.Variable(tf.random_normal([n_output_layer]))}
-
-    layer_1 = tf.add(tf.matmul(data, layer_1_wb['w_']), layer_1_wb['b_'])
-    layer_1 = tf.nn.relu(layer_1)
-    layer_2 = tf.add(tf.matmul(layer_1, layer_2_wb['w_']), layer_2_wb['b_'])
-    layer_2 = tf.nn.relu(layer_2)
-    layer_output = tf.add(tf.matmul(layer_2, layer_output_wb['w_']), layer_output_wb['b_'])
-
-    return layer_output
-
-X = tf.placeholder('float')
-Y = tf.placeholder('float')
-batch_size = 90
-
 def get_random_line(afile):
     return random.choice(open(afile).readlines())
 
@@ -83,6 +66,23 @@ a,b = l.split('",')
 a = a.replace('"', "")
 print a, b
 '''
+
+def neural_network(data):
+    layer_1_wb = {'w_':tf.Variable(tf.random_normal([n_input_leyer, n_layer_1])), 'b_':tf.Variable(tf.random_normal([n_layer_1]))}
+    layer_2_wb = {'w_':tf.Variable(tf.random_normal([n_layer_1, n_layer_2])), 'b_':tf.Variable(tf.random_normal([n_layer_2]))}
+    layer_output_wb = {'w_':tf.Variable(tf.random_normal([n_layer_2, n_output_layer])), 'b_':tf.Variable(tf.random_normal([n_output_layer]))}
+
+    layer_1 = tf.add(tf.matmul(data, layer_1_wb['w_']), layer_1_wb['b_'])
+    layer_1 = tf.nn.relu(layer_1)
+    layer_2 = tf.add(tf.matmul(layer_1, layer_2_wb['w_']), layer_2_wb['b_'])
+    layer_2 = tf.nn.relu(layer_2)
+    layer_output = tf.add(tf.matmul(layer_2, layer_output_wb['w_']), layer_output_wb['b_'])
+
+    return layer_output
+
+X = tf.placeholder('float')
+Y = tf.placeholder('float')
+batch_size = 100
 
 def train_neural_network(X, Y):
     predict = neural_network(X)
