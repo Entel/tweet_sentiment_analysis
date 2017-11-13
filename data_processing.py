@@ -14,8 +14,8 @@ from collections import OrderedDict
 reload(sys)
 sys.setdefaultencoding('latin-1')
 
-org_train_file = 'training.1600000.processed.noemoticon.csv'
-org_test_file = 'testdata.manual.2009.06.14.csv'
+#org_train_file = 'training.1600000.processed.noemoticon.csv'
+#org_test_file = 'testdata.manual.2009.06.14.csv'
 
 def usefull_filed(org_file, output_file):
     output = open(output_file, 'w')
@@ -35,10 +35,10 @@ def usefull_filed(org_file, output_file):
             output.write(outputline)
     output.close()
             
-usefull_filed(org_train_file, 'training.csv')
-print('Training data extracted!')
-usefull_filed(org_test_file, 'test.csv')
-print('Test data extracted!')
+#usefull_filed(org_train_file, 'training.csv')
+#print('Training data extracted!')
+#usefull_filed(org_test_file, 'test.csv')
+#print('Test data extracted!')
 
 #create a dictionary of the words 
 def create_lexicon(train_file):

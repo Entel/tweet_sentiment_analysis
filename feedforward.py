@@ -86,7 +86,7 @@ batch_size = 100
 
 def train_neural_network(X, Y):
     predict = neural_network(X)
-    cost_func = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(predict, Y))
+    cost_func = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=predict, labels=Y))
     optimizer = tf.train.AdamOptimizer().minimize(cost_func)
 
     with tf.Session() as session:
@@ -126,8 +126,8 @@ def train_neural_network(X, Y):
             accuracy = accuracy.eval({X:test_x, Y:test_y})
             if accuracy > pre_accuracy:
                 pre_accuracy = accuracy
-                saver.save(session, 'feedforward_model.ckpt')
-            print('Time: ', i, ', Accuracy: ', accuracy)
+                saver.save(session, './feedforward_model.ckpt')
+            print('Time: ', i, ', Accuracy: ', accuracy, ' - ', pre_accuracy)
             i = i + 1
 
 train_neural_network(X, Y)
